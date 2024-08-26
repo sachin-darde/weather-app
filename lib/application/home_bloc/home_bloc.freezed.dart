@@ -685,6 +685,7 @@ mixin _$HomeState {
   ForecastDto? get currentForecast => throw _privateConstructorUsedError;
   ScrollController get scrollController => throw _privateConstructorUsedError;
   CityDto? get city => throw _privateConstructorUsedError;
+  bool get locationAccessGranted => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $HomeStateCopyWith<HomeState> get copyWith =>
@@ -705,7 +706,8 @@ abstract class $HomeStateCopyWith<$Res> {
       int currentDateIndex,
       ForecastDto? currentForecast,
       ScrollController scrollController,
-      CityDto? city});
+      CityDto? city,
+      bool locationAccessGranted});
 
   $ForecastDtoCopyWith<$Res>? get currentForecast;
   $CityDtoCopyWith<$Res>? get city;
@@ -733,6 +735,7 @@ class _$HomeStateCopyWithImpl<$Res, $Val extends HomeState>
     Object? currentForecast = freezed,
     Object? scrollController = null,
     Object? city = freezed,
+    Object? locationAccessGranted = null,
   }) {
     return _then(_value.copyWith(
       isLoading: null == isLoading
@@ -771,6 +774,10 @@ class _$HomeStateCopyWithImpl<$Res, $Val extends HomeState>
           ? _value.city
           : city // ignore: cast_nullable_to_non_nullable
               as CityDto?,
+      locationAccessGranted: null == locationAccessGranted
+          ? _value.locationAccessGranted
+          : locationAccessGranted // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 
@@ -816,7 +823,8 @@ abstract class _$$HomeStateImplCopyWith<$Res>
       int currentDateIndex,
       ForecastDto? currentForecast,
       ScrollController scrollController,
-      CityDto? city});
+      CityDto? city,
+      bool locationAccessGranted});
 
   @override
   $ForecastDtoCopyWith<$Res>? get currentForecast;
@@ -844,6 +852,7 @@ class __$$HomeStateImplCopyWithImpl<$Res>
     Object? currentForecast = freezed,
     Object? scrollController = null,
     Object? city = freezed,
+    Object? locationAccessGranted = null,
   }) {
     return _then(_$HomeStateImpl(
       isLoading: null == isLoading
@@ -882,6 +891,10 @@ class __$$HomeStateImplCopyWithImpl<$Res>
           ? _value.city
           : city // ignore: cast_nullable_to_non_nullable
               as CityDto?,
+      locationAccessGranted: null == locationAccessGranted
+          ? _value.locationAccessGranted
+          : locationAccessGranted // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -898,7 +911,8 @@ class _$HomeStateImpl implements _HomeState {
       required this.currentDateIndex,
       this.currentForecast,
       required this.scrollController,
-      this.city})
+      this.city,
+      required this.locationAccessGranted})
       : _groupedForecasts = groupedForecasts,
         _dates = dates;
 
@@ -932,10 +946,12 @@ class _$HomeStateImpl implements _HomeState {
   final ScrollController scrollController;
   @override
   final CityDto? city;
+  @override
+  final bool locationAccessGranted;
 
   @override
   String toString() {
-    return 'HomeState(isLoading: $isLoading, weatherRepository: $weatherRepository, groupedForecasts: $groupedForecasts, dates: $dates, currentDate: $currentDate, currentDateIndex: $currentDateIndex, currentForecast: $currentForecast, scrollController: $scrollController, city: $city)';
+    return 'HomeState(isLoading: $isLoading, weatherRepository: $weatherRepository, groupedForecasts: $groupedForecasts, dates: $dates, currentDate: $currentDate, currentDateIndex: $currentDateIndex, currentForecast: $currentForecast, scrollController: $scrollController, city: $city, locationAccessGranted: $locationAccessGranted)';
   }
 
   @override
@@ -958,7 +974,9 @@ class _$HomeStateImpl implements _HomeState {
                 other.currentForecast == currentForecast) &&
             (identical(other.scrollController, scrollController) ||
                 other.scrollController == scrollController) &&
-            (identical(other.city, city) || other.city == city));
+            (identical(other.city, city) || other.city == city) &&
+            (identical(other.locationAccessGranted, locationAccessGranted) ||
+                other.locationAccessGranted == locationAccessGranted));
   }
 
   @override
@@ -972,7 +990,8 @@ class _$HomeStateImpl implements _HomeState {
       currentDateIndex,
       currentForecast,
       scrollController,
-      city);
+      city,
+      locationAccessGranted);
 
   @JsonKey(ignore: true)
   @override
@@ -991,7 +1010,8 @@ abstract class _HomeState implements HomeState {
       required final int currentDateIndex,
       final ForecastDto? currentForecast,
       required final ScrollController scrollController,
-      final CityDto? city}) = _$HomeStateImpl;
+      final CityDto? city,
+      required final bool locationAccessGranted}) = _$HomeStateImpl;
 
   @override
   bool get isLoading;
@@ -1011,6 +1031,8 @@ abstract class _HomeState implements HomeState {
   ScrollController get scrollController;
   @override
   CityDto? get city;
+  @override
+  bool get locationAccessGranted;
   @override
   @JsonKey(ignore: true)
   _$$HomeStateImplCopyWith<_$HomeStateImpl> get copyWith =>

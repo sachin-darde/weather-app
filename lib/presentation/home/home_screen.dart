@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_app/application/home_bloc/home_bloc.dart';
 import 'package:weather_app/domain/core/configs/app_config.dart';
 import 'package:weather_app/presentation/home/widgets/date_forecast.dart';
 import 'package:weather_app/presentation/home/widgets/forecast_details.dart';
+import 'package:weather_app/presentation/home/widgets/location_request_page.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -24,16 +26,17 @@ class HomeScreenConsumer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<HomeBloc, HomeState>(
-        listener: (context, state) {},
+    return BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
-          return const Scaffold(
-            body: SingleChildScrollView(
-              physics: ClampingScrollPhysics(),
-              child: Stack(
-                children: [DateForecast(), ForecastDetails()],
-              ),
-            ),
+          return Scaffold(
+            body: (!state.isLoading && !state.locationAccessGranted)
+                ? const LocationRequestPage()
+                : const SingleChildScrollView(
+                    physics: ClampingScrollPhysics(),
+                    child: Stack(
+                      children: [DateForecast(), ForecastDetails()],
+                    ),
+                  ),
           );
         });
   }

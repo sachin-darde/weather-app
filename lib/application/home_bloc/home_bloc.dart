@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:weather_app/domain/core/configs/app_config.dart';
 import 'package:weather_app/domain/core/helpers/generic_helpers.dart';
@@ -16,20 +17,28 @@ part 'home_bloc.freezed.dart';
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc(super.initState) {
     on<_OnLoad>((event, emit) async {
-      final weatherResponse =
-          await state.weatherRepository.fetchWeatherForecast(19.0760, 72.8777);
-      final city = weatherResponse.city;
-      final groupedForecasts =
-          _groupForecastsByDay(weatherResponse.list, city.timezone);
-      List<String> dates = groupedForecasts.keys.toList();
-      emit(state.copyWith(
-        groupedForecasts: groupedForecasts,
-        city: city,
-        dates: dates,
-        currentDate: dates.first,
-        currentDateIndex: 0,
-        currentForecast: groupedForecasts[dates[0]]!.first,
-      ));
+      try {
+        Position position = await _determinePosition();
+        final weatherResponse = await state.weatherRepository
+            .fetchWeatherForecast(position.latitude, position.longitude);
+        final city = weatherResponse.city;
+        final groupedForecasts =
+            _groupForecastsByDay(weatherResponse.list, city.timezone);
+        List<String> dates = groupedForecasts.keys.toList();
+        emit(state.copyWith(
+          groupedForecasts: groupedForecasts,
+          city: city,
+          dates: dates,
+          currentDate: dates.first,
+          currentDateIndex: 0,
+          currentForecast: groupedForecasts[dates[0]]!.first,
+          locationAccessGranted: true,
+        ));
+      } catch (error) {
+        emit(state.copyWith(
+          locationAccessGranted: false,
+        ));
+      }
     });
 
     on<_EmitFromAnywhere>((event, emit) {
@@ -37,7 +46,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     });
 
     on<_UpdateCurrentDate>((event, emit) {
-      state.scrollController.animateTo(0, curve: Curves.bounceIn, duration: const Duration(milliseconds: 300));
+      state.scrollController.animateTo(0,
+          curve: Curves.bounceIn, duration: const Duration(milliseconds: 300));
       emit(state.copyWith(
         currentDate: event.newDate,
         currentDateIndex: event.newIndex,
@@ -48,10 +58,35 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
     on<_SwitchForecast>((event, emit) {
       emit(state.copyWith(
-        currentForecast:
-            event.forecast,
+        currentForecast: event.forecast,
       ));
     });
+  }
+
+  Future<Position> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      throw Exception('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        throw Exception('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      throw Exception(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    return await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
   }
 
   Map<String, List<ForecastDto>> _groupForecastsByDay(

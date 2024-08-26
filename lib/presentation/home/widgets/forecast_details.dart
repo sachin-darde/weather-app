@@ -15,8 +15,7 @@ class ForecastDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<HomeBloc, HomeState>(
-        listener: (context, state) {},
+    return BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
           return Container(
             margin: EdgeInsets.only(top: 67.h),
