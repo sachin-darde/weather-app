@@ -121,4 +121,17 @@ class GenericHelpers {
         return AssetConstants.cloudyWeather;
     }
   }
+
+    static String getWeatherBackgroundImage(String weatherCondition) {
+    switch (weatherCondition.toLowerCase()) {
+      case 'rain':
+      case 'light rain':
+      case 'shower rain':
+        return AssetConstants.moderateRain;
+      case 'clear sky':
+        return AssetConstants.day;
+      default:
+        return AssetConstants.night;
+    }
+  }
 }
