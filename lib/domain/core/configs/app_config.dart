@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weather_app/domain/core/api/api_client.dart';
 
 class AppStateNotifier extends ChangeNotifier {
   bool isAuthorized;
@@ -20,6 +21,7 @@ class AppStateNotifier extends ChangeNotifier {
 
 class AppConfig extends InheritedWidget {
   final String appTitle;
+  final ApiClient apiClient;
 
   @override
   // ignore: overridden_fields
@@ -29,6 +31,7 @@ class AppConfig extends InheritedWidget {
     super.key,
     required this.appTitle,
     required this.child,
+    required this.apiClient,
   }) : super(child: child);
 
   static AppConfig? of(BuildContext context) {

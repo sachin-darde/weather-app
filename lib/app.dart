@@ -125,6 +125,7 @@ Future appInitializer(AppConfig appConfig) async {
 
   final AppConfig configuredApp = AppConfig(
     appTitle: appConfig.appTitle,
+    apiClient: appConfig.apiClient,
     child: ChangeNotifierProvider<AppStateNotifier>(
       create: (context) {
         return appStateNotifier;

@@ -13,6 +13,7 @@ class AssetConstants {
   static const cloudyWeather = '$imageFolder/cloudy-weather.png';
   static const thunderStorm = '$imageFolder/thunderstorm-weather.png';
   static const moon = '$imageFolder/moon.png';
+  static const sun = '$imageFolder/sun.png';
   static const highTemp = '$vectorsFolder/high-temp.svg';
   static const lowTemp = '$vectorsFolder/low-temp.svg';
   static const feelsLikeTemp = '$vectorsFolder/feels-like.svg';
